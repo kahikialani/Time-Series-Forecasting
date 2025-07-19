@@ -1,0 +1,327 @@
+---
+title: "Time Series Analysis of Spotify Interest via Google Trends"
+author: "Orion Marini"
+date: "2024-06-13"
+output:
+  html_document: default
+  pdf_document: default
+---
+# Abstract
+
+The purpose of this study is to provide a brief insight into the patterns and seasonal variation of the search query for "Spotify" via the Google search engine analyzed via Google trends data. In brief, we build a time series model based off the Box-Jenkins Approach for statistical analysis. In this, we choose a SARIMA(2,1,1)x(1,0,0) model to represent the Google Trend's time series data for the "Spotify" search query. With further assistance of the Unit root and Garch methods, we ultimately are able to develop a model to predict the popularity levels of Spotify with a certain degree of accuracy into the future in accordance with previous trends represented in the data. Ultimately, we discover that Spotify is likely to experience a new peak in popularity of search queries, followed by a plateau in the following months. Following which, the cycle should continue every 1 to 1.25 years throughout the next few 12 month cycles.  
+\newline
+\newline
+
+
+
+
+
+
+
+
+
+
+![Application Logo](Spotify_logo_with_text.svg.png)
+
+\newpage
+# Introduction - Why is this Important?
+
+  Over the last decade and a half, increase in the availability of subscription based music services has completely changed the way that customers consume their music media. In this investigation, we will take a deeper look at this trend via time series analysis methods that can help reveal underlying trends in such periodic data. There are a multitude of different music subscription services that we can look at in order to perform this analysis, but in this instance we will be focusing on the social interest levels of an application called Spotify, but this analysis can be similarly applied to a variety of other applications to compare with one another. In order to quantify Spotify's popularity in society, we can find data that correlates to how many times the term, "Spotify", is used in search engine. 
+
+
+  To do so, we will be taking a closer look into a specific data set retrieved from one of Google's services, Google Trends. Trends provides a service in which keywords can be entered into an engine and Trends will return the relative popularity over time of that keyword in their database. In essence, the amount of search queries for a keyword is given a number from 0 to 100, where 0 represents the minimum amount of searches over the data's time period while 100 represents the maximum. The data of "Spotify" covered by Google Trends encompasses a range from July, 2011, around the time of the applications release, till June 2024. This tool allows us to visualize the relative interest in Spotify as it grew from initial release till its current status as one of the most popular subscription based music service. 
+
+
+There are numerous ways to analysis time series data such as Google Trends data, but in this analysis we will be focusing on implementing the Box-Jenkins approach to identify, estimate, and diagnose time series models, as well as the GARCH and Unit Root methods to gain a further understanding on our time series data. 
+
+
+Ultimately, the key takeaway from this gaining insight into what impacts Spotify's popularity levels and predict how it may change in the future. From this study, there is a likely existence of trends indicating sustained growth, market influence, seasonal patterns, and impact of external events. Understanding these events will garner more information to produce a higher accuracy and confident model. In addition, the development of our model can help us provide accurate predictions of the data. Essentially, we can provide high confidence level guesses as to where the levels of popularity of Spotify will be in the future given the analysis of current and past time series data via Google Trends. 
+
+
+
+# Data - What are the Elements of Research?
+  As stated in the introduction, the data set is returned from Google Trends when entering "Spotify" as a keyword. The database contains time series data with a monthly frequency over the course of time ranging from Google's introduction in January 2004 up until the current month, June 2024. However, because Spotify was created in October of 2008, we only need to look at that subsection of the data set's timeline. Therefore, the time range of the usable data ranges monthly from October, 2008 up until June, 2024, summing up to 189 observations of our variable. 
+
+
+  But what exactly does this variable represent? Quintessentially, Google Trends measures the number of search queries from Google proportionally, meaning that when a specific amount of searches are requested each month of the year, Google compares that total value to previous totals and gives it a value of 100 if the amount of searches is the highest it ever has been. If the number of searches is less than a previous maximum, then the value will be be proportionate to that maximum. That is to say, Google Trend's data sets encompass values that represent the percentage of overall interest of Spotify over the course of it's existence. Therefore, it would be succinct to call the value something such as the "Popularity Level" of Spotify. 
+
+  Understanding these trends is of value to us because it allows us to understand how streaming services took over the previous forms of music media consuption as well as understand how streaming service's success compares to one another. Likewise, we can potentially see how the availability of such a service has effect peoples lives based off of obvious events within the time series data. In order to access the data yourself, you can follow the link which contains the specific search query and filters to find the data set of interest [(Google Trend's of "Spotify")](https://trends.google.com/trends/explore?date=all&q=Spotify&hl=en).
+
+# Methodology - How Do We Build a Time Series Model?
+
+  For this analysis, the first model we will be utilizing is known as a 
+SARIMA(p, d, q)x(P, D, Q) model, which stands for seasonal auto regressive integrated moving average. The goal of this model is to incorporate elements from the ARIMA model, (p, d, q), and those which incorporate seasonality into their predictions. With both of these components, the letter "P" represents the order of the regressive terms, the letter "D" represents the difference required to make the time series stationary, and the letter "Q" represents the order of moving average terms. The use of this model allows the account of seasonality within a time series data set with repeating cycles or patterns. Likewise, the model allows for the assessment of trends and patterns beyond that of seasonality. In conjuncture, these elements allow for the SARIMA model to provide more accurate forecasting for time series data. With that said, the SARIMA model provides a robust framework that allows for a greater understanding of both repeating trends and other influences for time series analysis in order to develop accurate forecasting. 
+
+
+Secondly, we will be incorporating two different methods of analysis to take make a deeper insight into our data, that being the application of the Unit Root and GARCH methods for time series analysis. The second of the methods we will be implementing is the Unit Root method. In this method, testing the existence of a unit root within the time series determines whether a time series is influenced by some stochastic trend, meaning that events in the system have a permanent effect on the series as a whole. The unit root also allows us to tell if the series is stationary, which is required for many other statistical analysis methods, such as SARIMA model building. Additionally, we will be developing a GARCH model for our time series data which stands for Generalized Autoregressive Conditional Heteroskedasticity. The purpose of this method is to help analyze and forecast time series data by taking into account the volatility. The basic idea is that GARCH models cluster volatile trends in the data, or where large changes occur together and small changes occur together. Essentially, the model determines that previous observation variance plays a role in the variance of the new observation. Small changes are usually followed by small changes where as large changes are followed by large changes. Ultimately, this method in conjucture with the previously outlined methods can help build a more fundamental understanding of the time series data as a whole in accountance for the volatility of the time series itself.  
+
+# Results - What is Happening? 
+
+One of the fundamental first steps we can take with the goal of analyzing our data is plotting the raw data. A lot can visually learned from this step, some of which is relative to our time series analysis where as some of it may not be as pertinent. Below, in Figure 1, is the plot of the values of "Popularity" across the data range, 2008 to 2024. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(astsa)
+library(tseries)
+library(naniar)
+library(quantmod)
+library(forecast)
+read_data <- read.csv("C:/Users/orion/Documents/PSTAT174/Spotify_Data.csv", skip = 59 ) # Number of lines before Spotify's creation.
+colnames(read_data)[colnames(read_data) == "X.1"] <- "Spotify"
+converted_data <- as.numeric(read_data$Spotify)
+```
+
+```{r timeseries, echo=FALSE, fig.width=6.5, fig.height=2.75}
+
+ts <- ts(converted_data, start = c(2008, 10), frequency = 12)
+par(cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.6)
+plot(ts, main = "Figure 1: Plot of Raw Spotify Data", ylab = "Percent of Max Popularity")
+```
+
+What is immediately apparent due to the distinct increasing nature of the graph, the time series is non-stationary. Therefore, we can not immediately perform analysis on this series as is, but rather we need to transform it before it is capable of analysis. Nevertheless, we can still draw out some low-hanging fruit trends so to speak that can be quite informative for later analysis. The data seems to have a quite distinct increase in variance after 2015, as demonstrated by the distance between peaks and troughs. In the same vein, the beginning features less variance. This trend will likely still be visible once we transform our data. Additionally, there a few distinct events in the may show up later, such as a drop at around the 2016 mark and a spike near 2021. 
+
+After choosing a multitude of testing techniques, we found that the data lacked normally distributed residuals, which a number of transformations would not alter. This was likely due to a period of relative low popularity in the beginning portion of the data. Plotting the data demonstrated a high area of variance, visually confirming this suspicion. In order to combat this, we can modify the input time series data for training our models. Instead of incorporating all the data, we can formulate a new time series excluding the first 40 entries, and once again taking the difference. This leaves us with a new time series that only utilizes the the data spanning from January 2013 till the end of the current period. Below in Figure 2 is the modified time series plot.
+```{r, include = FALSE, echo = FALSE}
+#converted_data[52:189]
+```
+```{r new_series, echo = FALSE, fig.width=6.5, fig.height=2.75}
+#converted_data[33:189]
+modified_ts <- ts(converted_data[52:189], c(2013, 01), frequency = 12)
+par(cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.6)
+plot(modified_ts, main = "Figure 2: Spotify Interest Time Series, Excluding 52 Entries", ylab = "Popularity Percentage")
+```
+
+To continue our analysis, we can perform the Augmented Dickey-Fuller Test for the Unit Root method and check the returning p-value to determine if we reject or accept the null hypothesis.
+```{r, echo = FALSE}
+raw_p_val <- adf.test(modified_ts)
+cat("Dick-Fuller Test P-Value: ", raw_p_val$p.value)
+```
+As shown above, the p-value is above 0.05, which means we accept the null hypothesis that the series is non-stationary; therefore, we must difference the data.
+```{r, include = FALSE}
+
+acf(ts)
+pacf(ts)
+```
+
+```{r differencing, echo = FALSE, warning = FALSE, fig.width=6.5, fig.height=2.75}
+diff_ts <- diff(modified_ts)
+adf_test_diff <- adf.test(diff_ts)
+par(cex = 0.8, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+plot(diff_ts, main = "Figure 3: Spotify Series Difference", ylab="Popularity Percentage Difference")
+```
+```{r 2nd_pval, echo = FALSE}
+cat("Dickey-Fuller Test P-Value: ", adf_test_diff$p.value)
+```
+After taking the difference, we receive the above plot of the data in Figure 3, as well as the p-value given above, meaning that we reject the null hypothesis and determine that the alternative hypothesis where the series difference is stationary is indeed accepted.  
+
+Next, we take a look at the plot of the ACF, or the auto correlation function plot, to determine how values at different lags correlate with one another in the transformed series. Similarly, the PACF, or partial auto correlation function, shows us the extent of correlation between values and their lags. In both plots, the blue line represents the 95% confidence interval, where values that go beyond the line are thought to be statistically significant. The ACF for the transformed Spotify time series can be found in Figure 4, and the PACF can be found in Figure 5 below.
+```{r, echo = FALSE, warning = FALSE, fig.width=6.5, fig.height=2.75}
+par(cex = 1, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+acf(diff_ts, main = "Figure 4: ACF of Transformed Spotify Series")
+```
+```{r, echo = FALSE, warning = FALSE, fig.width=6.5, fig.height=2.75}
+par(cex = 1, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+pacf(diff_ts, main = "Figure 5: PACF of Transformed Spotify Series")
+```
+
+As shown in the ACF, a majority of the correlation at different lags lay within the 95% confidence interval, indicating they are most likely random. However, there are some that extend beyond the line, meaning that they are statistically significant in correlation. The most distinct feature is the peak of strong positive correlation located at lag 1.0, which can be seen in both the ACF and PACF plots. This indicates that there is likely an existence of short term persistence from value to value or that the series maintains some momentum through its range. The existence of this same peak at a lag of 1.0 in the PACF indicates that using an AR(1) could be sufficient for building our model. Overall, the interpretation of the ACF and PCF allows us to build a more succinct model to fit our time series as a whole. 
+
+
+As for model building, we can utilize the R function auto.arima to automatically adjust a fit for our model, but we can also assign our own following the SARIMA(p, d, q) x (P, D, Q) formula that we outlined earlier, picking values for each order terms appropriately. From our test results of multiple models, we found that an SARIMA(2,1,1)X(1,0,0) gave the best results for our models based off of the Shapiro-Wilk normality test p-value and and the AIC of the model, which are both given in the snippet below. Additionally, the checking residuals plot is featured below under Figure 6.
+```{r fit1, echo = FALSE, include = TRUE}
+fit1 <- auto.arima(modified_ts)
+fit1_summary <- summary(fit1)
+shapiro_result <- shapiro.test(fit1$residuals)
+```
+```{r fit1_print, echo = FALSE}
+cat("Shapiro-Wilk P-Value: ", shapiro_result$p.value, "\n")
+cat("SARIMA SUMMARY: ")
+fit1_summary
+```
+```{r residuals_graphs, echo = FALSE, fig.width= 8, fig.height= 4, warning=FALSE}
+par(cex = 1, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+rplot <- checkresiduals(fit1)
+```
+```{r fit2, echo = FALSE, include = FALSE}
+fit2 <- arima(modified_ts , order = c(1, 0, 1), seasonal = c(1, 0, 0))
+summary(fit2)
+checkresiduals(fit2)
+qqnorm(fit2$residuals, main="Q-Q Plot of Residuals")
+qqline(fit2$residuals, col="red")
+shapiro.test(fit2$residuals)
+```
+```{r fit3, echo = FALSE, include = FALSE}
+fit3 <- arima(modified_ts , order = c(3, 0, 1), seasonal = c(1, 2, 2))
+summary(fit3)
+checkresiduals(fit3)
+qqnorm(fit3$residuals, main="Q-Q Plot of Residuals")
+qqline(fit3$residuals, col="red")
+shapiro.test(fit3$residuals)
+```
+```{r fit4, echo = FALSE, include = FALSE}
+fit4 <- arima(modified_ts , order = c(1, 0, 1), seasonal = c(1, 2, 2))
+summary(fit4)
+checkresiduals(fit4)
+qqnorm(fit4$residuals, main="Q-Q Plot of Residuals")
+qqline(fit4$residuals, col="red")
+shapiro.test(fit4$residuals)
+```
+# Model Implementation - How Can This Inform Us of Trends or Predict Values?
+
+Now that we have selected our SARIMA model, we can put it to the test: forecasting future values of popularity. Of interesting note in the forecasting step of this analysis, because our data is based on a scale from 0 to 100 in correlation with previous values, there is a chance that forecasting may predict values that go beyond 100. While this may initially seem problematic, it would be fixable by adjusting the rest of the values in the data set to be the proper ratio in regards to the new maximum. Additionally, you can still implement this feature, just noting that values above 100 are valued with the previous maximum in mind. Nevertheless, the existence of this "problem" should not strictly limit the usability of the model as a whole. Therefore, we can safely continue dissecting the above analysis.
+
+
+Below, Figure 7 shows the next 12 predicted months of Spotify's popularity levels within Google Trends via forecast. As is apparent, there is a pretty decent range of variability in the prediction, but of significant note is the prediction of another large peak followed by a decline. This tells us that the trend causing the peak likely exists in the data, which can be confirmed by looking at previous levels throughout past observations. Therefore, it is likely that the model found a trend or pattern of peak interest in Google searches that repeats throughout the course of the existence of Spotify! It seems that a regular pattern of peak interest followed by a decline occurs between every 1 and 1.25 years on the timeline. In addition to this discovery, it seems that the model suggests that there will likely be either a plateau in popularity or even a decrease after this event. Overall, the forecast can tell us important information about how the model fits the data itself, and any trends that may have been incorporated into the prediction model. 
+```{r forecast1, echo = FALSE, fig.width=6.5, fig.height = 3.25}
+forecasted <- forecast(fit1, h = 12)
+par( cex = 0.7, cex.axis = 0.7, cex.lab = 0.7, cex.main = 0.7)
+plot(forecasted, ylab = "Popularity Level")
+
+```
+
+Lastly, we can utilize one more method to analyze the effectiveness of our stationary time series. The GARCH method's implementation is somewhat straight forward, build a model to help analyze and forecast the volatility of our stationary time series. For our time series, we developed a GARCH model in R to fit the data including the difference, the parameter output of which is below.
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library("rugarch")
+mod_specify <- ugarchspec(mean.model = list(armaOrder=c(0,0)), variance.model = list(model = "sGARCH", garchOrder = c(1,1)), distribution.model = "norm")
+
+garch_mod <- ugarchfit(data = diff_ts, spec = mod_specify, out.sample = 20)
+
+garch_mod@fit$matcoef
+```
+Likewise, the ACF of standardized residuals for the GARCH model is shown below. This shows us that the correlation of residuals is highest at lag 12, further indicating a yearly correlation trend and volatility in the time series data.
+
+```{r, echo = FALSE, fig.width=6.5, fig.height = 2.75}
+par( cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.7)
+#plot(garch_mod, which = 8, main = "Figure 8: Empirical Density of Standardized Residuals")
+plot(garch_mod, which = 10, main = "Figure 9: ACF of Standardized Residuals")
+```
+\newpage
+
+# Conclusion - What Have We Learned?
+
+
+In this study, we performed a comprehensive time series analysis of the Google search term "Spotify" using Google Trends data to represent the growing popularity of the music subscription based service. By implementing the Box-Jenkins approach, we identified and developed a SARIMA(2,1,1)x(1,0,0) model, which able to effectively captured the seasonal and non-seasonal patterns in the data. Further, we utilized unit root tests to confirm that our initial data set was not stationary and that after taking the difference, the time series was stationary. Additionally, we applied the GARCH model to analyze and forecast the volatility inherent in our time series. 
+
+
+The results from our SARIMA model indicate that Spotify's popularity experiences periodic peaks approximately every 1 to 1.25 years, followed by declines or plateaus. This cyclical pattern highlights a consistent trend in user interest for the application, potentially influenced by external events and seasonal factors. The GARCH model further highlighted the presence of volatility clustering, indicating that periods of high volatility are likely to be followed by similar periods. 
+
+
+Overall, our analysis provides valuable insights into the patterns and trends of Spotify's search interest, allowing for more informed predictions about future popularity levels. As the forecast data suggests, Spotify's interest is likely to peak higher in the coming year than it ever has before. This information can be crucial for strategic planning and marketing efforts for music streaming services such as Spotify, but analysis of other applications may provide to be just as fruitful. As streaming services continue to evolve, such predictive models will be instrumental in understanding consumer behavior and adapting to the changing market dynamics that are imminent.
+
+![Application Logo Stylized](world.png)
+
+\newpage
+
+# References
+
+
+
+Shumway, Robert H., and David S. Stoffer. Time Series Analysis and Its Applications: With R Examples. 4th ed., Springer, 2017.
+
+
+
+Tsafack, Idriss S. "GARCH Models with R Programming: A Practical Example with Tesla Stock." Idriss Tsafack, https://www.idrisstsafack.com/post/garch-models-with-r-programming-a-practical-example-with-tesla-stock. Accessed 6/10/2024.
+
+
+# Appendix 
+
+```{r appendix, eval=FALSE}
+# Setup
+knitr::opts_chunk$set(echo = TRUE)
+library(astsa)
+library(tseries)
+library(naniar)
+library(quantmod)
+library(forecast)
+read_data <- read.csv("C:/Users/orion/Documents/PSTAT174/Spotify_Data.csv", skip = 59 ) # Number of lines before Spotify's creation.
+colnames(read_data)[colnames(read_data) == "X.1"] <- "Spotify"
+converted_data <- as.numeric(read_data$Spotify)
+
+# Time series creation
+ts <- ts(converted_data, start = c(2008, 10), frequency = 12)
+par(cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.6)
+plot(ts, main = "Figure 1: Plot of Raw Spotify Data", ylab = "Percent of Max Popularity")
+
+
+# Modifying Time Series to exclude 52 values
+modified_ts <- ts(converted_data[52:189], c(2013, 01), frequency = 12)
+par(cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.6)
+plot(modified_ts, main = "Figure 2: Spotify Interest Time Series, Excluding 52 Entries", ylab = "Popularity Percentage")
+
+# Extracting raw_p_val
+raw_p_val <- adf.test(modified_ts)
+cat("Dick-Fuller Test P-Value: ", raw_p_val$p.value)
+
+# Time Series Difference
+diff_ts <- diff(modified_ts)
+adf_test_diff <- adf.test(diff_ts)
+par(cex = 0.8, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+plot(diff_ts, main = "Figure 3: Spotify Series Difference", ylab="Popularity Percentage Difference")
+
+# Extracting diff_pval
+cat("Dickey-Fuller Test P-Value: ", adf_test_diff$p.value)
+
+# ACF of time series difference
+par(cex = 1, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+acf(diff_ts, main = "Figure 4: ACF of Transformed Spotify Series")
+
+# PACF of time series difference
+par(cex = 1, cex.axis = 0.8, cex.lab = 0.8, cex.main = 0.8)
+pacf(diff_ts, main = "Figure 5: PACF of Transformed Spotify Series")
+
+
+# Fit Selected SARIMA(2,1,1)x(1,0,0)
+fit1 <- auto.arima(modified_ts)
+fit1_summary <- summary(fit1)
+shapiro_result <- shapiro.test(fit1$residuals)
+
+# Printing Shapiro-Wilk P-VALUE
+cat("Shapiro-Wilk P-Value: ", shapiro_result$p.value, "\n")
+cat("SARIMA SUMMARY: ")
+fit1_summary
+
+# Residuals graph
+rplot <- checkresiduals(fit1)
+
+
+# Additional Testing and Models
+fit2 <- arima(modified_ts , order = c(1, 0, 1), seasonal = c(1, 0, 0))
+summary(fit2)
+checkresiduals(fit2)
+qqnorm(fit2$residuals, main="Q-Q Plot of Residuals")
+qqline(fit2$residuals, col="red")
+shapiro.test(fit2$residuals)
+fit3 <- arima(modified_ts , order = c(3, 0, 1), seasonal = c(1, 2, 2))
+summary(fit3)
+checkresiduals(fit3)
+qqnorm(fit3$residuals, main="Q-Q Plot of Residuals")
+qqline(fit3$residuals, col="red")
+shapiro.test(fit3$residuals)
+fit4 <- arima(modified_ts , order = c(1, 0, 1), seasonal = c(1, 2, 2))
+summary(fit4)
+checkresiduals(fit4)
+qqnorm(fit4$residuals, main="Q-Q Plot of Residuals")
+qqline(fit4$residuals, col="red")
+shapiro.test(fit4$residuals)
+
+# Forecast
+forecasted <- forecast(fit1, h = 12)
+par( cex = 0.7, cex.axis = 0.7, cex.lab = 0.7, cex.main = 0.7)
+plot(forecasted, ylab = "Popularity Level")
+
+
+# GARCH
+library("rugarch")
+mod_specify <- ugarchspec(mean.model = list(armaOrder=c(0,0)), variance.model = list(model = "sGARCH", garchOrder = c(1,1)), distribution.model = "norm")
+
+garch_mod <- ugarchfit(data = diff_ts, spec = mod_specify, out.sample = 20)
+
+garch_mod@fit$matcoef
+
+# Plotting
+par( cex = 0.7, cex.axis = 0.7, cex.lab = 0.6, cex.main = 0.7)
+#plot(garch_mod, which = 8, main = "Figure 8: Empirical Density of Standardized Residuals")
+plot(garch_mod, which = 10, main = "Figure 9: ACF of Standardized Residuals")
+```
